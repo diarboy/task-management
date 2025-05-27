@@ -36,6 +36,9 @@ export default function Projects() {
   const [editProject, setEditProject] = useState<Project | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+
   const fetchProjects = async () => {
     const querySnapshot = await getDocs(collection(db, 'projects'));
     const data = querySnapshot.docs.map((doc) => ({
@@ -61,6 +64,7 @@ export default function Projects() {
     }
   };
 
+  
   const deleteProject = async (id: string) => {
     await deleteDoc(doc(db, 'projects', id));
     fetchProjects();
@@ -135,13 +139,19 @@ export default function Projects() {
                 >
                   Edit
                 </Button>
-                <Button
-                  size="small"
-                  color="error"
-                  onClick={() => deleteProject(project.id)}
-                >
-                  Delete
-                </Button>
+
+              <Button
+                size="small"
+                color="error"
+                onClick={() => {
+                  setProjectToDelete(project);
+                  setDeleteDialogOpen(true);
+                }}
+              >
+                Delete
+              </Button>
+
+              
               </CardActions>
             </Card>
           </Grid>
@@ -184,6 +194,35 @@ export default function Projects() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Are you sure you want to delete the project{' '}
+              <strong>{projectToDelete?.name}</strong>?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button
+              onClick={async () => {
+                if (projectToDelete) {
+                  await deleteProject(projectToDelete.id);
+                  setDeleteDialogOpen(false);
+                  setProjectToDelete(null);
+                }
+              }}
+              color="error"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+
     </Box>
   );
 }
