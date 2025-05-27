@@ -1,3 +1,4 @@
+import { Snackbar, Alert } from '@mui/material';
 import { useState, useEffect } from 'react';
 import {
   Box,
@@ -38,6 +39,10 @@ export default function Projects() {
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
 
   const fetchProjects = async () => {
     const querySnapshot = await getDocs(collection(db, 'projects'));
@@ -140,7 +145,7 @@ export default function Projects() {
                   Edit
                 </Button>
 
-              <Button
+             <Button
                 size="small"
                 color="error"
                 onClick={() => {
@@ -150,6 +155,8 @@ export default function Projects() {
               >
                 Delete
               </Button>
+
+
 
               
               </CardActions>
@@ -209,19 +216,38 @@ export default function Projects() {
           <DialogActions>
             <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
             <Button
-              onClick={async () => {
-                if (projectToDelete) {
-                  await deleteProject(projectToDelete.id);
-                  setDeleteDialogOpen(false);
-                  setProjectToDelete(null);
-                }
-              }}
-              color="error"
-            >
-              Delete
-            </Button>
+                onClick={async () => {
+                  if (projectToDelete) {
+                    await deleteProject(projectToDelete.id);
+                    setDeleteDialogOpen(false);
+                    setProjectToDelete(null);
+                    setSnackbarMessage('Project berhasil dihapus');
+                    setSnackbarOpen(true);
+                  }
+                }}
+                color="error"
+              >
+                Delete
+              </Button>
+
           </DialogActions>
         </Dialog>
+
+        
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={3000}
+            onClose={() => setSnackbarOpen(false)}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          >
+            <Alert
+              onClose={() => setSnackbarOpen(false)}
+              severity="success"
+              sx={{ width: '100%' }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
 
     </Box>
   );
