@@ -165,7 +165,7 @@ export default function Dashboard() {
           <Card sx={{ backgroundColor: '#f1f8e9', boxShadow: 3 }}>
             <CardContent>
               <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                Ringkasan Status Tugas
+                Ringkasan Status Tugas by SABIL
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Chip
