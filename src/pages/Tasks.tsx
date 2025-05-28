@@ -94,7 +94,7 @@ export default function Tasks() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Add new task..."
             variant="outlined"
-            size="small"
+            size="medium"
           />
           <Button variant="contained" onClick={addTask}>
             Add
